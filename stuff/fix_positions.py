@@ -21,11 +21,11 @@ def set_positions(filename, x, y, overwrite):
         if "x-pos" in rec.props:
             prop = rec.props["x-pos"]
             if prop is None:
-                prop = rec.create_Property("x-pos", [xv])
+                prop = rec.create_property("x-pos", [xv])
                 prop.unit = "cm"
             elif prop is not None and overwrite:
                 del rec["x-pos"]
-                prop = rec.create_Property("x-pos", [xv])
+                prop = rec.create_property("x-pos", [xv])
                 prop.unit = "cm"
             else:
                 print("Eigenschaft x-pos besteht bereits. Wenn ueberschrieben werden" +
@@ -37,8 +37,8 @@ def set_positions(filename, x, y, overwrite):
                 prop = rec.create_property("y-pos", [yv])
                 prop.unit = "cm"
             elif prop is not None and overwrite:
-                del rec["x-pos"]
-                prop = rec.create_Property("x-pos", [yv])
+                del rec["y-pos"]
+                prop = rec.create_property("y-pos", [yv])
                 prop.unit = "cm"
             else:
                 print("Eigenschaft y-pos  besteht bereits. Wenn ueberschrieben werden" +
