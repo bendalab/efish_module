@@ -9,6 +9,7 @@ def set_conductivity(filename, conductivity, overwrite):
     b = f.blocks[0]
     m = b.metadata
     rec = None
+
     for s in m.sections:
         if "recording" in s.name.lower():
             rec = s
@@ -17,18 +18,21 @@ def set_conductivity(filename, conductivity, overwrite):
         cv = nix.Value(float(conductivity))
 
         prop = None
-        if "x-pos" in rec.props:
+
+        if "WaterConductivity" in rec.props:
             prop = rec.props["WaterConductivity"]
-            if prop is None:
-                prop = rec.create_Property("WaterConductivity", [cv])
-                prop.unit = "uS/cm"
-            elif prop is not None and overwrite:
-                del rec["x-pos"]
-                prop = rec.create_Property("WaterConductivity", [cv])
+            if prop is not None and overwrite:
+                del rec["WaterConductivity"]
+                prop = rec.create_property("WaterConductivity", [cv])
                 prop.unit = "uS/cm"
             else:
                 print("Eigenschaft WaterConductivity besteht bereits. Wenn ueberschrieben werden" +
                       " soll, muss die Option -o (--overwrite) benutzt werden!")
+        else:
+            if prop is None:
+                prop = rec.create_property("WaterConductivity", [cv])
+                prop.unit = "uS/cm"
+        
     f.close()
 
 
@@ -43,4 +47,4 @@ if __name__ == "__main__":
     if not os.path.exists(args.datei):
         print('Datei %s existiert nicht!' % args.datei)
         exit()
-    set_conductivity(args.datei, args.x, args.y, args.overwrite)
+    set_conductivity(args.datei, args.conductivity, args.overwrite)
