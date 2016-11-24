@@ -4,32 +4,6 @@ import os
 from IPython import embed
 
 
-def add_weight(filename, weight, overwrite=False):
-    f = nix.File.open(filename, nix.FileMode.ReadWrite)
-    b = f.blocks[0]
-    m = b.metadata
-    subject = None
-    for s in m.sections:
-        if "subject" in s.name.lower():
-            subject = s
-            break
-    if subject is not None:
-        v = nix.Value(weight)
-        prop = None
-        if "Weight" in subject.props:
-            prop = subject.props["Weight"]
-
-        if prop is None:
-            prop = subject.create_property("Weight", [v])
-            prop.unit = "g"
-        elif prop is not None and overwrite:
-            prop.values = [v]
-        else:
-            print("Eigenschaft Weight besteht bereits. Wenn ueberschrieben werden" +
-                  " soll, muss die Option --overwrite benutzt werden!")
-    f.close()
-
-
 def set_positions(filename, x, y, overwrite):
     f = nix.File.open(filename, nix.FileMode.ReadWrite)
     b = f.blocks[0]
@@ -40,29 +14,32 @@ def set_positions(filename, x, y, overwrite):
             rec = s
             break
     if rec is not None:
-        xv = nix.Value(x)
-        yv = nix.Value(y)
+        xv = nix.Value(float(x))
+        yv = nix.Value(float(y))
 
         prop = None
         if "x-pos" in rec.props:
             prop = rec.props["x-pos"]
             if prop is None:
-                prop = rec.create_property("x-pos", [xv])
+                prop = rec.create_Property("x-pos", [xv])
                 prop.unit = "cm"
             elif prop is not None and overwrite:
-                prop.values = [xv]
+                del rec["x-pos"]
+                prop = rec.create_Property("x-pos", [xv])
+                prop.unit = "cm"
             else:
                 print("Eigenschaft x-pos besteht bereits. Wenn ueberschrieben werden" +
                       " soll, muss die Option --overwrite benutzt werden!")
 
         if "y-pos" in rec.props:
             prop = rec.props["y-pos"]
-
             if prop is None:
                 prop = rec.create_property("y-pos", [yv])
                 prop.unit = "cm"
             elif prop is not None and overwrite:
-                prop.values = [yv]
+                del rec["x-pos"]
+                prop = rec.create_Property("x-pos", [yv])
+                prop.unit = "cm"
             else:
                 print("Eigenschaft y-pos  besteht bereits. Wenn ueberschrieben werden" +
                       " soll, muss die Option --overwrite benutzt werden!")
