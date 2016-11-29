@@ -113,29 +113,31 @@ def read_jar_data(data_file, pre_stimulus_duration=5., post_stimulus_duration=20
         if "ManualJAR" in t.name:
             tag = t
             break
+
+    stim_meta = nix_metadata_to_dict(tag.metadata)
+    metadata.update(stim_meta)
+
     start_time = tag.positions[:][0]
     duration = tag.extents[:][0]
     events_array = b.data_arrays['EOD_events']
     eod_array = b.data_arrays["EOD"]
     sampling_rate = 1./eod_array.dimensions[0].sampling_interval
-    start_time = start_time - pre_stimulus_duration
-    pre_stimulus_duration = pre_stimulus_duration if start_time > 0 else tag.positions[:][0]
+
+    pre_stimulus_duration = pre_stimulus_duration if start_time > pre_stimulus_duration else tag.positions[:][0]
+    if (start_time + duration + post_stimulus_duration) * sampling_rate > len(eod_array):
+        post_stimulus_duration = len(eod_array) / sampling_rate - start_time - duration
     end_time = start_time + duration + post_stimulus_duration
-    start_index = start_time * sampling_rate
+
+    start_index = (start_time - pre_stimulus_duration) * sampling_rate
     end_index = end_time * sampling_rate
-    post_stimulus_duration = post_stimulus_duration if end_index < len(eod_array) else len(eod_array) / sampling_rate - start_time - duration
-    if start_index < 0:
-        start_index = 0
-        start_time = 0.
-    if end_index > len(eod_array):
-        end_index = len(eod_array) -1
-        end_time = end_index / sampling_rate
-    eod = eod_array[:][int(start_index) : int(end_index)]
+
+    eod = eod_array[:][int(start_index):int(end_index)]
     times = events_array[:]
-    eod_times = times[(times > start_time) & (times < start_time + duration)]
+    eod_times = times[(times > (start_time - pre_stimulus_duration)) & (times < end_time)] - start_time
     f.close()
     time = np.arange(len(eod)) / sampling_rate - pre_stimulus_duration
     return pre_stimulus_duration, post_stimulus_duration, duration, eod, eod_times, time, metadata
+
 
 if __name__ == "__main__":
     # make sure to close the file before exiting! Take care, when using embed!
