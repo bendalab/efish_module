@@ -8,20 +8,20 @@ if __name__ == '__main__':
     seed(float(np.random.rand(1)))
     shuffle(paper_nr)
 
-    paper_dict = {1: ['23.11', 'Hagedorn & Heiligenberg, 1985'],
-                  2: ['23.11', 'v. d. Emde & Bleckmann, 1997'],
-                  3: ['24.11', 'Stamper, 2010'],
-                  4: ['24.11', 'Schumacher et al., 2016'],
-                  5: ['28.11', 'Stoddard, 2008'],
-                  6: ['28.11', 'Carlson, 2011'],
-                  7: ['29.11', 'Catania, 2014'],
+    paper_dict = {0: ['23.11', 'Hagedorn & Heiligenberg, 1985'],
+                  1: ['23.11', 'v. d. Emde & Bleckmann, 1997'],
+                  2: ['24.11', 'Stamper, 2010'],
+                  3: ['24.11', 'Schumacher et al., 2016'],
+                  4: ['28.11', 'Stoddard, 2008'],
+                  5: ['28.11', 'Carlson, 2011'],
+                  6: ['29.11', 'Catania, 2014'],
                   # 8: ['29.11', 'Catania, 2015'],
-                  8: ['29.11', 'Zupanc et al., 2003'],
-                  9: ['30.11', 'Hupe et al., 2008'],
-                  10: ['30.11', 'Kawasaki, 1997'],
-                  11: ['01.12', 'Rose, 2004'],
+                  7: ['29.11', 'Zupanc et al., 2003'],
+                  8: ['30.11', 'Hupe et al., 2008'],
+                  9: ['30.11', 'Kawasaki, 1997'],
+                  10: ['01.12', 'Rose, 2004'],
                   # 12: ['02.11', 'McAnnelly, 2000'],
-                  12: ['01.12', 'Nelson, 1999']}
+                  11: ['01.12', 'Nelson, 1999']}
                   # 13: ['03.12', 'Kreysing, 2012']}
 
     for enu, curr_nr in enumerate(paper_nr):
