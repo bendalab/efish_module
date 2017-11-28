@@ -63,7 +63,10 @@ def read_subject_info(data_file):
     f = nix.File.open(data_file, nix.FileMode.ReadOnly)
     b = f.blocks[0]
     m = b.metadata
-    subject_m = m['Subject-' + dataset_stub]
+    if "Subject-" + dataset_stub in m.sections:
+        subject_m = m['Subject-' + dataset_stub]
+    else:
+        subject_m = m['Subject']
     subject_info = nix_metadata_to_dict(subject_m)
     f.close()
     return subject_info
@@ -149,7 +152,8 @@ def read_jar_data(data_file, count=-1):
 
 if __name__ == "__main__":
     # make sure to close the file before exiting! Take care, when using embed!
-    datafile = '/Users/jan/zwischenlager/efish_kurs/data/chirps/2017-11-27-aa-amnesix/2017-11-27-aa-amnesix.nix'
+    datafile = '/home/grewe/zwischenlager/2017-11-27-aa-amnesix/2017-11-27-aa-amnesix.nix'
+    #datafile = '/Users/jan/zwischenlager/efish_kurs/data/chirps/2017-11-27-aa-amnesix/2017-11-27-aa-amnesix.nix'
     # t,e = read_eod(datafile)
     # events = read_eod_events(datafile)
     # info = read_subject_info(datafile)
