@@ -126,7 +126,9 @@ def read_jar_data(data_file, count=-1):
     f = nix.File.open(data_file, nix.FileMode.ReadOnly)
     b = f.blocks[0]
     tag = None
-
+    events_array = b.data_arrays['EOD_events']
+    times = events_array[:]
+    
     for i, tag in enumerate(b.multi_tags):
         if "ManualJAR" in tag.name:
             number = int(tag.name.split('-')[-1])
@@ -136,8 +138,6 @@ def read_jar_data(data_file, count=-1):
                 df, before, after, duration = read_df(jar_file_name)
             start_time = tag.positions[:][0]
             duration = tag.extents[:][0]
-            events_array = b.data_arrays['EOD_events']
-            times = events_array[:]
             eod_times = times[(times > (start_time - before)) & (times < (start_time + duration + after))] - start_time
 
             data.append(eod_times)
